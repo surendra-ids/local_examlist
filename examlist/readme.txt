@@ -21,7 +21,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-This plugin presents the user a consolidated list of all thwe quizzes that he has to attempt form the courses that he has been rnrolled.\
+This plugin presents the user a consolidated list of all the quizzes that he has to attempt form the courses that he has been enrolled.\
 Now he/she has not to go to all the courses individually and directly pick the list from a link in the left navigation.
 
 This plugin's link can be only visible in boost based themes or themes that have the flat navigation on the left.

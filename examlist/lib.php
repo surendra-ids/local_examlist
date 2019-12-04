@@ -23,39 +23,15 @@
  * @copyright  2019 idslogic <sales@idslogic.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
-require_once("$CFG->libdir/blocklib.php");
+
+defined('MOODLE_INTERNAL') || die();
 global $DB, $CFG;
 
 function local_examlist_extend_navigation(global_navigation $navigation) {
     $dashboardurl = '/local/examlist/index.php';
 
     if (isloggedin()) {
-        $node = $navigation->add('My Assessments', $dashboardurl);
+        $node = $navigation->add(get_string('myassessments','local_examlist'), $dashboardurl);
         $node->showinflatnavigation = true;
-    }
-}
-
-class ExamList {
-
-    public function getexams($userid) {
-        global $DB;
-
-        $coursequizzes = array();
-        $usercourses = enrol_get_users_courses($userid);
-        if(!empty($usercourses)) {
-            foreach ($usercourses as $key => $course) {
-                $quiz = $DB->get_records('quiz', array('course' => $course->id));
-                if (!empty($quiz)) {
-                    foreach ($quiz as $qkey => $value) {
-                        $quizzes[$value->id] = $value;
-                        $result = $DB->get_record('course_modules', array('instance' => $value->id, 'module' => 16), 'id');
-                        $quizzes[$value->id]->instanceid = $result->id;
-                    }
-                    $coursequizzes[$key] = $quizzes;
-                }
-            }
-        }
-        return $coursequizzes;
     }
 }

@@ -23,13 +23,18 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
-require_once($CFG->dirroot . '/local/examlist/lib.php');
+require_once($CFG->dirroot . '/local/examlist/locallib.php');
+global $DB,$USER;
+
+$search = optional_param('search','',PARAM_RAW);
+$page = optional_param('page', 0, PARAM_INT);
+$perpage = optional_param('perpage', 2, PARAM_INT);
 
 $PAGE->set_pagelayout('frontpage');
 //redirect_if_major_upgrade_required();
 
 require_login();
-$strmymoodle = 'Exam Listing';
+$strmymoodle = get_string('pluginname','local_examlist');
 if (!isguestuser()) {
     $userid = $USER->id;
     $context = context_user::instance($USER->id);
@@ -42,21 +47,25 @@ $PAGE->set_pagetype('my-index');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title($header);
 $PAGE->set_heading($header);
-if (!isguestuser()) {
 
-}
-$PAGE->requires->css('/local/examlist/css/custom.css', false);
 echo $OUTPUT->header();
 
-
-global $USER;
+$totalcount = 0;
+$usercourses = enrol_get_users_courses($USER->id);
+if(!empty($usercourses)) {
+  foreach ($usercourses as $key => $course) {
+     $totalcount += $DB->count_records('quiz', array('course' => $course->id));
+    }
+}
 
 $html = '';
 $html .= html_writer::start_tag('section');
-$html .= html_writer::tag('h2', 'My Assesments', array('class'=>'course_title'));
+$html .= html_writer::tag('h2', get_string('myassessments','local_examlist'), array('class'=>'course_title'));
     
 $renderer = $PAGE->get_renderer('local_examlist');
 $html .=    $renderer->display_quizzes();
+
+$html .= $renderer->print_paging_bar($totalcount, $page, $perpage,'');
 $html .= html_writer::end_tag('section');
 echo $html;
 echo $OUTPUT->footer();

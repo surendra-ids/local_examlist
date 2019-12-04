@@ -15,24 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Local plugin "examlist"
+ * Privacy Subsystem implementation for block_activity_modules.
  *
- * This file helps students with a list of all the quizzes that he has to perform.
- * @package    local_examlist
+ * @package    block
+ * @subpackage course_forums
  * @copyright  2019 idslogic <sales@idslogic.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace local_examlist\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['title'] = 'title';
-$string['description'] = 'Description';
-$string['pluginname'] = 'Exam Listing';
-$string['noassessments'] = 'No Assessments are found';
-$string['exam_name'] = 'Exam Name';
-$string['operation'] = 'Operation';
-$string['myassessments'] = 'My Assessments';
-$string['course_name'] = 'Course Name';
-$string['status'] = 'Status';
-$string['attempted'] = 'Attempted';
-$string['not_yet_attempted'] = 'Not yet attempted';
+/**
+ * Privacy Subsystem for block_course_forums implementing null_provider.
+ *
+ * @copyright  2019 idslogic <sales@idslogic.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

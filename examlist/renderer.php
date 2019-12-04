@@ -38,16 +38,29 @@ class local_examlist_renderer extends plugin_renderer_base {
         $examlist = new ExamList();
         $records = $examlist->getexams($USER->id);
 		$table = new html_table();
-	    $table->head = array('Exam Name','Operation');
+	    $table->head = array(get_string('exam_name','local_examlist'),get_string('course_name','local_examlist'),
+               get_string('status','local_examlist'), get_string('operation','local_examlist'));
 	    if(!empty($records)) {
-		    foreach ($records as $record) {
-		    	foreach($record as $quiz) {
-		        	$table->data[] = array($quiz->name, html_writer::link(new moodle_url('/mod/quiz/view.php', array('id'=>$quiz->instanceid)), 'Take Assesment'));
-		    	}
-		    }
+		    	foreach($records as $id => $quiz) {
+		        	$table->data[] = array($quiz->quizname, $quiz->counrsename,$quiz->attempt,html_writer::link(new moodle_url('/mod/quiz/view.php', array('id'=>$quiz->instanceid)), 'Take Assesment'));
+		        }
 		} else {
-            $table->data[] = array('No assessments found', '');
+            $table->data[] = array(get_string('noassessments','local_examlist'), '');
         }
 	    return html_writer::table($table);
+    }
+    
+    
+        public function print_paging_bar($totalrecords, $page, $perpage,$search) {
+        global $OUTPUT;
+
+        $baseurl = new moodle_url('/local/examlist/index.php');
+        
+        $baseurl->params(array('search' => $search));
+
+        $output = '';
+        $output .= $OUTPUT->paging_bar($totalrecords, $page, $perpage, $baseurl);
+        return $output;
+        
     }
 }
